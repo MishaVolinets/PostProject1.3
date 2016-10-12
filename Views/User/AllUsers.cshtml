@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "AllUsers";
+}
+
+<h2>All Users</h2>
+
+<div ng-controller="AllUsersCtrl" ng-cloak>
+    <div ng-repeat="User in Users">
+        <div class="bl-allUsers">
+            <div class="bl-allUser-Img">
+                <div class="fl-allUser-Img">
+                    <img ng-src="{{User.srcPhoto}}" class="img-circle" width="120px" height="120px">
+                </div>
+            </div>
+            <div class="bl-allUser-Content">
+                <div class="bl-allUser-ContentPart">
+                    <span class="bl-allUser-ContentText">
+                        <a href="User/UserPage?UserId={{User.Id}}" target="_self">{{User.FirstName +" "+User.LastName}}</a>
+                    </span>
+                </div>
+                <div class="bl-allUser-ContentPart">
+                    <span class="bl-allUser-ContentText">
+                        {{User.Age}}
+                    </span>
+                </div>
+                <div class="bl-allUser-ContentPart">
+                    <span class="bl-allUser-ContentText">
+                        {{User.NativeTown}}
+                    </span>
+                </div>
+                <div class="bl-allUser-ContentPart">
+                    <button type="button" class="btn btn-default">Добавити в друзі</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

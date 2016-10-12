@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "MyPage";
+}
+<div ng-controller="UserPageCtrl" ng-cloak>
+    {{UserId}}
+    <div class="modal fade" id="EditPostModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Закрити</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Редагування сторінки</h4>
+                </div>
+                <div class="modal-body">
+                    <label>Age:</label> 
+                    <input type="text" class="form-control" ng-model="EditedUser.Age">
+                    <label>Town:</label>
+                    <input type="text" class="form-control" ng-model="EditedUser.NativeTown">
+                    <label>Hobby:</label>
+                    <input type="text" class="form-control" ng-model="EditedUser.Hobby">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрити</button>
+                    <button type="button" class="btn btn-primary" ng-click="SaveEditedUser()" data-dismiss="modal">Зберегти зміни</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bl-User-Main" >
+        <div class="bl-Content-User">
+            <div class="bl-Content-UsName">
+                <div class="fl-Content-UsName">{{User.FirstName}}</div>
+                <div class="fl-Content-UsName">{{User.LastName}}</div>
+            </div>
+        </div>
+        <div class="bl-Content-User">
+            <div class="bl-Content-Img">
+                <div class="fl-Content-Img">
+                    <img ng-src="{{User.Image}}" alt="UserPhoto"
+                         class="img-circle fl-Content-ImgBorder" width="170" height="170">
+                </div>
+            </div>
+        </div>
+        <div class="bl-Content-User">
+            <div class="bl-Content-Info">
+                <div class="fl-Content-Info">
+                    Age: {{User.Age}}
+                </div>
+                <div class="fl-Content-Info">
+                    Town: {{User.NativeTown}}
+                </div>
+                <div class="fl-Content-Info">
+                    Hobby: {{User.Hobby}}
+                </div>
+                @if (ViewBag.UserId == User.Identity.GetUserId())
+                {
+                <div class="btn-Content-Info">
+                    <button type="submit" class="btn btn-primary btn-sm btn-custum" ng-click="editUser(User)" data-toggle="modal" data-target="#EditPostModal">Редагувати профіль</button>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-controller="PostCtrl" ng-cloak>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Редагування поста</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="PU-block-Tit">
+                        <input type="hidden" id="EPostId" ng-model="EPost.Id" />
+                        <div id="PU-Tit">
+                            Title:
+                        </div>
+                        <div id="PU-in-Tit">
+                            <input type="text" class="form-control" id="EPostTitle" ng-model="EPost.Title"></input>
+                        </div>
+                    </div>
+                    <div id="PU-block-Des">
+                        <div id="PU-Des">
+                            <div id="PU-in-Des">Description:</div>
+
+                            <textarea class="form-control" rows="5" id="EPostDescription" ng-model="EPost.Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button" data-dismiss="modal">Скасувати</button>
+                    <button type="button" class="button" ng-click="saveEditedPost()" data-dismiss="modal">Зберегти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@if (ViewBag.UserId == User.Identity.GetUserId())
+{
+        <div class="form-group">
+            <label for="InputTitle">Назва посту</label>
+            <input type="text" class="form-control" id="InputTitle" ng-model="newPost.Title" placeholder="Введіть назву посту">
+        </div>
+        <div class="form-group">
+            <label for="InputDescription">Опис посту</label>
+            <textarea class="form-control" id="InputDescription" rows="3" ng-model="newPost.Description" placeholder="Введіть опис посту"></textarea>
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="addPost(newPost)">Відправити</button>
+}
+
+    <div ng-repeat="Post in Posts">
+        <div class="bl-Main" id="{{Post.Id}}">
+            <div class="bl-info">
+                <div class="bl-tit">
+                    <div class="name">{{Post.User.FirstName + " " + Post.User.LastName }}</div>
+                    @if (ViewBag.UserId == User.Identity.GetUserId())
+                    {
+                    <button class="buttonDel" ng-click="deletePost(Post.Id)">Видалити</button>
+                    }
+                </div>
+                <div class="bl-tit">
+                    <div class="date">{{Post.DateOfCreate | date:'dd.MM.yyyy HH:mm'}}</div>
+                    @if (ViewBag.UserId == User.Identity.GetUserId())
+                    {
+                    <button class="buttonEdit" value="{{Post.Id}}" ng-click="editPost(Post)" data-toggle="modal" data-target="#myModal">Редагувати</button>
+                    }
+                </div>
+            </div>
+            <div class="bl-title" id="titId_{{Post.Id}}">
+                {{Post.Title}}
+            </div>
+            <div class="bl-description" id="descId_{{Post.Id}}">
+                <p>{{Post.Description}}</p>
+            </div>
+        </div>
+    </div>
+</div>
